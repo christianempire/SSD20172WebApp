@@ -1,0 +1,50 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+  <!-- Base meta data -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>@ViewData["Title"]</title>
+
+  <environment include="Development">
+    <!-- Bootstrap -->
+    <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+    <!-- Font awesome -->
+    <link href="~/lib/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <!-- Site -->
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+  </environment>
+  <environment exclude="Development">
+    <!-- Bootstrap -->
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- Font awesome -->
+    <link href="~/lib/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+    <!-- Site -->
+    <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
+  </environment>
+</head>
+<body>
+  <!-- Page content -->
+  @RenderBody()
+  <!-- /.page-content -->
+
+  <environment include="Development">
+    <!-- JQuery -->
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <!-- Bootstrap -->
+    <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+    <!-- Site -->
+    <script src="~/js/site.js" asp-append-version="true"></script>
+  </environment>
+  <environment exclude="Development">
+    <!-- JQuery -->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <!-- Bootstrap -->
+    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!-- Site -->
+    <script src="~/js/site.min.js" asp-append-version="true"></script>
+  </environment>
+
+  @RenderSection("Scripts", required: false)
+</body>
+</html>
