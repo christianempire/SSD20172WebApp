@@ -1,46 +1,545 @@
 ﻿@{
-    ViewData["Title"] = "Inicio";
+    ViewData["Title"] = "Simulación Aeropuerto";
 }
 
-<div class="container-fluid">
+<div class="" style="margin-right:1%;margin-left:1%">
   <div class="row">
-      <h1>Sistema de Soporte de Decisión</h1>
-    
-    <div class="form-group col-md-2">
+    <div class="col-md-6" align="left">
+      <h1 style="color:white"><b>Sistema de Soporte de Decisiones</b></h1>
+    </div>
+    <div class="col-md-offset-4 col-md-2" align="right">
+      <img id="image" src="http://www.ulima.edu.pe/sites/all/themes/ulima/logo.png" style="width:146px;height:52px;" />
+    </div>
+  </div>
+  <div class="row">
+    <div class="form-group col-md-1">
       <label>Modo</label>
-      <select class="form-control">
-        <option value="basic">Básico</option>
-        <option value="advance">Avanzado</option>
+      <select id="listOptions" class="form-control" onchange="change()">
+        <option value="simple">Básico</option>
+        <option value="advanced">Avanzado</option>
       </select>
     </div>
-
-    <div class="form-group col-md-2">
-      <label>Agentes sin experiencia</label> <input id="numnew" class="form-control" placeholder="Ingrese número de agentes sin experiencia">
-      <label>Agentes expertos</label> <input id="numexp" class="form-control" placeholder="Ingrese número de agentes expertos">
+    <div id="divBasic" class="form-group col-md-2">
+      <div id="divNE" style="margin-bottom: 1%">
+        <label>Agentes expertos</label> <input id="numexp" class="form-control onlyNumber" placeholder="Ingrese número de agentes expertos">
+      </div>
+      <div id="divNN" style="margin-bottom: 1%">
+        <label>Agentes nuevos</label> <input id="numnew" class="form-control onlyNumber" placeholder="Ingrese número de agentes nuevos">
+      </div>
     </div>
+    <div id="divAdvance">
+      <div class="form-group col-md-2">
+        <div id="divTA" style="margin-bottom: 1%">
+          <label>Turno de agentes</label> <input id="numexp" class="form-control onlyNumber" placeholder="Ingrese las horas de turno">
+        </div>
+        <div id="divTR" style="margin-bottom: 1%">
+          <label>Tiempo de refrigerio</label> <input id="TR" class="form-control onlyNumber" placeholder="Ingrese el tiempo de refrigerio">
+        </div>
+      </div>
+      <div class="form-group col-md-2">
+        <div id="divTAE" style="margin-bottom: 1%">
+          <label>Tiempo de atención - agente experto</label> <input id="TAE" class="form-control onlyNumber" placeholder="Ingrese el tiempo de atención">
+        </div>
+        <div id="divTAN" style="margin-bottom: 1%">
+          <label>Tiempo de atención - agente nuevo</label> <input id="TAN" class="form-control onlyNumber" placeholder="Ingrese el tiempo de atención">
+        </div>
+      </div>
+      <div class="form-group col-md-2">
+        <div id="divTLP" style="margin-bottom: 1%">
+          <label>Tiempo de llegada de pasajeros</label> <input id="TLP" class="form-control onlyNumber" placeholder="Ingrese el tiempo de llegada de pasajeros">
+        </div>
+        <div id="divTTP" style="margin-bottom: 1%">
+          <label style="display: block;">Tiempo de traslado de pasajeros</label>
+          <input id="TTPI" class="form-control col-xs-1 onlyNumber" placeholder="Inicio" style="width: 49%; margin-right: 1%">
+          <input id="TTPF" class="form-control col-xs-1 onlyNumber" input-xs" placeholder="Fin" style="width: 50%">
+        </div>
+      </div>
+      <div class="form-group col-md-2">
+        <div id="divTLP" style="margin-bottom: 1%">
+          <label>Tiempo de atención del mostrador</label> <input id="TLP" class="form-control onlyNumber" placeholder="Ingrese el tiempo de atención del mostrador">
+        </div>
 
-   <button id="btnexecute" type="button" class="btn btn-success"> Ejecutar </button>
-    
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-4" align="left">
+      <button id="btnmanual" type="button" class="btn" onclick="modalmanual()" style="    background-color: #e27e2f;
+				border-color: #c38d63;    color: white;">
+        <span class="glyphicon glyphicon-book" aria-hidden="true"></span> Ver manual
+      </button>
+      <button id="btnexecute" type="button" class="btn" style="    color: #fff;
+				background-color: #5cb85c;
+				border-color: #4cae4c;" onclick="execute()">
+        <span class="glyphicon glyphicon glyphicon-ok" aria-hidden="true"></span> Ejecutar
+      </button>
+      <button id="btnsave" type="button" class="btn" style="    color: #fff;
+				background-color: #24748c;
+				border-color: #1a677d;" onclick="save()">
+        <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> Guardar
+      </button>
+      <button id="btncases" type="button" class="btn" style="    color: #fff;
+				background-color: #5c5dcf;
+				border-color: #5c5dcf;" onclick="modalCases()">
+        <span class="glyphicon glyphicon-search" aria-hidden="true"></span> Ver escenarios
+      </button>
+    </div>
+  </div>
+  <div id="divrecomendation" class="row" style="margin-top: 2%">
+    <div id="alertR" class="alert alert-success" role="alert" style="margin-left: 15px;margin-right: 15px;margin-bottom: 0px;">
+      <label>Se recomienda ...</label>
+    </div>
+  </div>
+  <div id="divResult" class="row" style="margin-top: 2%">
+    <div class="col-md-12">
+      <div id="piechart_div" style="display: inline-block;"></div>
+      <div id="barchart_div" style="display: inline-block;"></div>
+      <table id="tabresult" style="width:auto;display: inline-block;background: white;margin-bottom: 181px;" class="table table-hover table-responsive">
+        <thead>
+        <th>Otros datos</th>
+        <th></th>
+        </thead>
+        <tbody id="tabdetail">
+          <tr>
+            <td>Tamaño promedio de cola</td>
+            <td>0</td>
+          </tr>
+
+          <tr>
+            <td>Tamaño máximo de la cola</td>
+            <td>0</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="modalMsg" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+  <div id="manual-dialog" class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header" id="hmanual" style="background: #6bc4e6">
+        <h3 class="modal-title col-md-11" style="color:white"> <b>Manual de usuario</b></h3>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-header" id="hwelcome" style="background: #6bc4e6">
+        <h3 class="modal-title col-md-11" style="color:white"> <b>Bienvenido(a)</b></h3>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-header" id="hcases" style="background: #6bc4e6">
+        <h3 class="modal-title col-md-11" style="color:white"> <b>Lista de escenarios</b></h3>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body col-md-12" id="bmanual">
+        <div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="false">
+          <!-- Indicators -->
+          <ol class="carousel-indicators">
+            <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+            <li data-target="#myCarousel" data-slide-to="1"></li>
+          </ol>
+          <!-- Wrapper for slides -->
+          <div class="carousel-inner">
+            <div class="item active">
+              <img src="~/images/manual-1.png" />
+            </div>
+            <div class="item">
+              <img src="~/images/manual-2.png" />
+            </div>
+          </div>
+          <!-- Left and right controls -->
+          <a class="left carousel-control" href="#myCarousel" data-slide="prev">
+            <span class="glyphicon glyphicon-chevron-left"></span>
+            <span class="sr-only">Previous</span>
+          </a>
+          <a class="right carousel-control" href="#myCarousel" data-slide="next">
+            <span class="glyphicon glyphicon-chevron-right"></span>
+            <span class="sr-only">Next</span>
+          </a>
+        </div>
+      </div>
+      <div class="modal-body col-md-12" id="bcases">
+        <table class="table table-hover" style="width:100%" id="tabcases">
+          <thead>
+          <th>Nombre del escenario</th>
+          <th>Acciones</th>
+          </thead>
+          <tbody>
+            <tr id="c1" class="">
+              <td>Caso 15 agentes</td>
+              <td>
+                <button id="bsc1" type="button" onclick="selectCase('bsc1')" class="btn btn-default case" aria-label="Left Align">
+                  <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
+                </button>
+                <button id="bec1" type="button" onclick="eliminate('c1')" class="btn btn-default" aria-label="Left Align">
+                  <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                </button>
+                <button id="bdc1" type="button" onclick="seeDetails('c1')" class="btn btn-default" aria-label="Left Align">
+                  <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+                </button>
+              </td>
+            </tr>
+            <tr id="c2" class="">
+              <td>Caso 10 agentes</td>
+              <td>
+                <button type="button" id="bsc2" class="btn btn-default case" onclick="selectCase('bsc2');" aria-label="Left Align">
+                  <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
+                </button>
+                <button id="bec2" type="button" onclick="eliminate('c2')" class="btn btn-default" aria-label="Left Align">
+                  <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                </button>
+                <button id="bdc2" type="button" onclick="seeDetails('c2')" class="btn btn-default" aria-label="Left Align">
+                  <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-body col-md-12" id="bwelcome">
+        <p>Facultad: Ingeniería</p>
+        <p>Curso: Sistema de Soporte de decisiones</p>
+        <p>Ciclo: 2017-2</p>
+        <p>Integrantes:</p>
+        <table style="width:100%">
+          <tbody id="tabwelcome">
+            <tr><td>Cabrera Diaz, Daniel</td><td>20131642</td></tr>
+            <tr><td>Changa Castillo, Christian</td><td>20143344</td></tr>
+            <tr><td>Dextre Porras, Anthony</td><td>20111763</td></tr>
+            <tr><td>Li Morante, Jazmín</td><td>20141941</td></tr>
+            <tr><td>Martínez Vélez, Carlos</td><td>20122872</td></tr>
+            <tr><td>Morillo Palacios, Bruna</td><td>20142059</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer" id="fwelcome">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+      </div>
+      <div class="modal-footer" id="fcases">
+        <button type="button" class="btn btn-success" onclick="seeChanges()" data-dismiss="modal">Mostrar seleccionado(s)</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal 2-->
+<div class="modal fade" id="modalDtl" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header" id="hmanual" style="background: #6bc4e6">
+        <h3 class="modal-title col-md-11" style="color:white"> <b>Detalles</b></h3>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body col-md-12" id="bwelcome">
+        <table style="width:100%" class="table table-hover">
+          <tbody id="tabdetail">
+            <tr>
+              <td>Agentes expertos</td>
+              <td>2</td>
+            </tr>
+            <tr>
+              <td>Agentes nuevos</td>
+              <td>2</td>
+            </tr>
+            <tr>
+              <td>Turno de agentes</td>
+              <td>2</td>
+            </tr>
+            <tr>
+              <td>Tiempo de refrigerio</td>
+              <td>2</td>
+            <tr>
+              <td>Tiempo de atención - agente experto</td>
+              <td>2</td>
+            </tr>
+            <tr>
+              <td>Tiempo de atención - agente nuevo</td>
+              <td>2</td>
+            </tr>
+            <tr>
+              <td>Tiempo de atención del mostrador</td>
+              <td>2</td>
+            </tr>
+            <tr>
+              <td>Tiempo de atención del traslado de pasajeros - inicio</td>
+              <td>2</td>
+            </tr>
+            <tr>
+              <td>Tiempo de atención del traslado de pasajeros - fin</td>
+              <td>2</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer" id="fdetail">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button id="buttonSaveModal" type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#saveModal">Open Modal</button>
+<div id="saveModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header" style="background: #6bc4e6">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title" style="color: white">Modal Header</h4>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <input id="modeldescription" type="text" class="form-control" placeholder="Escriba un nombre para el modelo" />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" onclick="$('#buttonSaveModal').trigger('click')" data-dismiss="modal">Guardar</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
   </div>
 </div>
 
 @section Scripts {
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
   <script>
-    $("#btnexecute").click(function () { 
+    var simulationResults;
+
+    //Variables generales
+    var listSelected;
+
+    var change = function () {
+
+      if ($("#listOptions").val() == "basic") {
+        $("#divAdvance").hide()
+      }
+      else if ($("#listOptions").val() == "advance") {
+        $("#divAdvance").show()
+      }
+    };
+
+    var modalinit = function () {
+      $("#hwelcome").show()
+      $("#bwelcome").show()
+      $("#bmanual").hide()
+      $("#hmanual").hide()
+      $("#hcases").hide()
+      $("#bcases").hide()
+      $("#fcases").hide()
+      $("#fwelcome").show()
+      $("#modalMsg").modal("show");
+    };
+
+    var modalmanual = function () {
+      $("#hwelcome").hide()
+      $("#bwelcome").hide()
+      $("#bmanual").show()
+      $("#hmanual").show()
+      $("#hcases").hide()
+      $("#bcases").hide()
+      $("#fcases").hide()
+      $("#fwelcome").show()
+      $("#modalMsg").modal("show");
+    };
+
+    var modalCases = function () {
+      $("#hwelcome").hide()
+      $("#bwelcome").hide()
+      $("#bmanual").hide()
+      $("#hmanual").hide()
+      $("#hcases").show()
+      $("#bcases").show()
+      $("#fcases").show()
+      $("#fwelcome").hide()
+      $("#modalMsg").modal("show")
+    };
+
+    var execute = function () {
+
+      var payload = {}
+      if ($("#listOptions").val() === "simple") {
+        payload = getSimpleSimulationPayload();
+      }
+      else if ($("#listOptions").val() === "advanced") {
+        payload = getAdvancedSimulationPayload();
+      }
+      else {
+        return;
+      }
       $.ajax({
-        url: baseUrl + "run",
-        type: "get",
-        data: {
-          numNewAgents: $("#numnew").val(),
-          numExpertAgents: $("#numexp").val()
+        url: baseUrl + "run/" + $("#listOptions").val(),
+        data: payload,
+        method: "GET",
+        success: function (response) {
+          if (response !== null && response !== "" && response.status !== 400) {
+            simulationResults = response;
+            drawChart();
+            $("#tabdetail").html('<tr><td> Tamaño promedio de cola</td><td>' + simulationResults.avgNumberInQueue + '</td></tr><tr><td>Tamaño máximo de la cola</td><td>' + simulationResults.maxNumberInQueue + '</td></tr>');
+            $("#divResult").show();
+            $("#divrecomendation").show();
+          }
         },
-        success: function (response) { 
-          console.log(response);
-        },
-        error: function (xhr) { 
+        error: function (xhr) {
           console.log(xhr);
         }
       });
+
+    };
+
+    function drawChart() {
+
+      var datapie = new google.visualization.DataTable();
+      datapie.addColumn('string', 'Topping');
+      datapie.addColumn('number', 'Slices');
+      if (simulationResults && typeof simulationResults !== "undefined") {
+        rows = [];
+        contExp = 1;
+        contNue = 1;
+        for (var i = 0; i < simulationResults.agent.length; i++) {
+          agent = simulationResults.agent[i];
+          if (agent.isExpert) {
+            rows.push(['E' + contExp, agent.utilization]);
+            contExp++;
+          }
+          else {
+            rows.push(['N' + contNue, agent.utilization]);
+            contNue++;
+          }
+        }
+        datapie.addRows(rows);
+      } else {
+        datapie.addRows([
+          ['Agentes expertos', 1],
+          ['Agentes nuevos', 1],
+        ]);
+      }
+
+      var piechart_options = {
+        title: 'Utilización promedio de agentes',
+        width: 400,
+        height: 300
+      };
+
+      var piechart = new google.visualization.PieChart(document.getElementById('piechart_div'));
+
+      piechart.draw(datapie, piechart_options);
+
+      var databar = new google.visualization.DataTable();
+      databar.addColumn('string', 'Topping');
+      databar.addColumn('number', 'Slices');
+      if (simulationResults && typeof simulationResults !== "undefined") {
+        databar.addRows([
+          ['Atención', simulationResults.avgWaitingTime * 60],
+          ['Pasajero\nen el sistema', simulationResults.avgTimeInSystem],
+        ]);
+      } else {
+        databar.addRows([
+          ['Atención', 0],
+          ['En sistema', 0],
+        ]);
+      }
+
+      var barchart_options = {
+        title: 'Tiempos promedios (minutos)',
+        width: 400,
+        height: 300,
+        legend: 'none'
+      };
+      var barchart = new google.visualization.BarChart(document.getElementById('barchart_div'));
+      barchart.draw(databar, barchart_options);
+    };
+
+    //esta funcion es para que solo permita números en los input
+    $(".onlyNumber").keydown(function (e) {
+      // Allow: backspace, delete, tab, escape, enter and .
+      if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110, 190]) !== -1 ||
+        // Allow: Ctrl+A, Command+A
+        (e.keyCode === 65 && (e.ctrlKey === true || e.metaKey === true)) ||
+        // Allow: home, end, left, right, down, up
+        (e.keyCode >= 35 && e.keyCode <= 40)) {
+        // let it happen, don't do anything
+        return;
+      }
+      // Ensure that it is a number and stop the keypress
+      if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+        e.preventDefault();
+      }
     });
+
+    var save = function () {
+      
+    };
+
+    var eliminate = function (id) {
+      swal({
+        title: "Confirmación",
+        text: "Una vez eliminado el registro no se podrá recuperar. ¿Seguro que desea eliminarlo?",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        cancelButtonText: "No",
+        confirmButtonText: "Sí",
+        closeOnConfirm: false,
+        closeOnCancel: true
+      }).then(isConfirm => {
+        if (isConfirm) {
+          swal(
+            "\u00C9xito",
+            "Escenario eliminado correctamente",
+            "success");
+        }
+      });
+    };
+
+    var seeDetails = function (id) {
+      $("#modalDtl").modal("show");
+    };
+
+    var selectCase = function (id) {
+      var idnew = "#" + id
+
+      //Esta parte es para cambiar el ícono
+      if ($(idnew).children().attr("class") == "glyphicon glyphicon-eye-open") {
+
+        $(idnew).children().removeClass('glyphicon glyphicon-eye-open').addClass('glyphicon glyphicon-eye-close');
+
+      } else if ($(idnew).children().attr("class") == "glyphicon glyphicon-eye-close") {
+
+        $(idnew).children().removeClass('glyphicon glyphicon-eye-close').addClass('glyphicon glyphicon-eye-open');
+
+      };
+    };
+
+    var seeChanges = function () {
+      swal({
+        title: "Se est\u00E1 actualizando la página, por favor espere.",
+        type: "warning",
+        html: true,
+        showConfirmButton: false
+      });
+    };
+
+    var main = function () {
+      $("#divAdvance").hide();
+      $("#divResult").hide();
+      $("#divrecomendation").hide();
+      modalinit();
+      // Load Charts and the corechart and barchart packages.
+      google.charts.load('current', { 'packages': ['corechart'] });
+
+      // Draw the pie chart and bar chart when Charts is loaded.
+      google.charts.setOnLoadCallback(drawChart);
+    };
+
+    $(document).ready(main);
   </script>
 }
