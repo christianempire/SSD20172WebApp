@@ -1,33 +1,69 @@
 ﻿body {
-  background: url('https://i.ytimg.com/vi/UqE908uIh9k/maxresdefault.jpg');
+  background: url("https://i.ytimg.com/vi/UqE908uIh9k/maxresdefault.jpg");
   background-size: 100%;
-  background-position: center top;
-}
+  background-position: center top; }
+
+#home .heading {
+  margin: 15px 0; }
+  #home .heading .title h1 {
+    color: white;
+    font-weight: bold;
+    margin: 0; }
+  #home .heading .logo img {
+    width: 146px;
+    height: 52px; }
+
+#home .simulation-form .form-group {
+  margin-bottom: 0; }
+  #home .simulation-form .form-group .fieldset {
+    margin-bottom: 15px; }
+
+#home .options button {
+  margin-bottom: 5px; }
+  #home .options button#button-manual {
+    background-color: #e27e2f;
+    border-color: #c38d63;
+    color: white; }
+  #home .options button#button-execute {
+    color: #fff;
+    background-color: #5cb85c;
+    border-color: #4cae4c; }
+  #home .options button#button-save {
+    color: #fff;
+    background-color: #24748c;
+    border-color: #1a677d; }
+  #home .options button#button-cases {
+    color: #fff;
+    background-color: #5c5dcf;
+    border-color: #5c5dcf; }
+
+#main-modal .modal-dialog .modal-content {
+  overflow: hidden; }
+  #main-modal .modal-dialog .modal-content .modal-header {
+    background: #6bc4e6; }
+    #main-modal .modal-dialog .modal-content .modal-header .modal-title {
+      color: white;
+      font-weight: bold; }
+  #main-modal .modal-dialog .modal-content .modal-body#body-modal-welcome table {
+    width: 100%; }
+
+@media (min-width: 768px) {
+  #main-modal .modal-dialog {
+    width: 900px; } }
 
 #tabwelcome tr td {
   font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
   font-size: 14px;
   line-height: 1.42857143;
-  color: #333;
-}
+  color: #333; }
 
 #tabcases {
   font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
   font-size: 14px;
   line-height: 1.42857143;
-  color: #333;
-}
-
+  color: #333; }
   #tabcases button {
-    margin-bottom: 5px;
-  }
-
+    margin-bottom: 5px; }
   #tabcases td {
-    width: 15px;
-  }
+    width: 15px; }
 
-@media (min-width: 768px) {
-  #manual-dialog {
-    width: 80%;
-  }
-}

@@ -2,95 +2,101 @@
     ViewData["Title"] = "Simulación Aeropuerto";
 }
 
-<div class="" style="margin-right:1%;margin-left:1%">
-  <div class="row">
-    <div class="col-md-6" align="left">
-      <h1 style="color:white"><b>Sistema de Soporte de Decisiones</b></h1>
+<div id="home" class="container-fluid">
+  <div class="row heading">
+    <div class="col-sm-12 col-md-8 title" align="left">
+      <h1>Sistema de Soporte de Decisiones</h1>
     </div>
-    <div class="col-md-offset-4 col-md-2" align="right">
-      <img id="image" src="http://www.ulima.edu.pe/sites/all/themes/ulima/logo.png" style="width:146px;height:52px;" />
-    </div>
-  </div>
-  <div class="row">
-    <div class="form-group col-md-1">
-      <label>Modo</label>
-      <select id="listOptions" class="form-control" onchange="change()">
-        <option value="simple">Básico</option>
-        <option value="advanced">Avanzado</option>
-      </select>
-    </div>
-    <div id="divBasic" class="form-group col-md-2">
-      <div id="divNE" style="margin-bottom: 1%">
-        <label>Agentes expertos</label> <input id="numexp" class="form-control onlyNumber" placeholder="Ingrese número de agentes expertos">
-      </div>
-      <div id="divNN" style="margin-bottom: 1%">
-        <label>Agentes nuevos</label> <input id="numnew" class="form-control onlyNumber" placeholder="Ingrese número de agentes nuevos">
-      </div>
-    </div>
-    <div id="divAdvance">
-      <div class="form-group col-md-2">
-        <div id="divTA" style="margin-bottom: 1%">
-          <label>Turno de agentes</label> <input id="numexp" class="form-control onlyNumber" placeholder="Ingrese las horas de turno">
-        </div>
-        <div id="divTR" style="margin-bottom: 1%">
-          <label>Tiempo de refrigerio</label> <input id="TR" class="form-control onlyNumber" placeholder="Ingrese el tiempo de refrigerio">
-        </div>
-      </div>
-      <div class="form-group col-md-2">
-        <div id="divTAE" style="margin-bottom: 1%">
-          <label>Tiempo de atención - agente experto</label> <input id="TAE" class="form-control onlyNumber" placeholder="Ingrese el tiempo de atención">
-        </div>
-        <div id="divTAN" style="margin-bottom: 1%">
-          <label>Tiempo de atención - agente nuevo</label> <input id="TAN" class="form-control onlyNumber" placeholder="Ingrese el tiempo de atención">
-        </div>
-      </div>
-      <div class="form-group col-md-2">
-        <div id="divTLP" style="margin-bottom: 1%">
-          <label>Tiempo de llegada de pasajeros</label> <input id="TLP" class="form-control onlyNumber" placeholder="Ingrese el tiempo de llegada de pasajeros">
-        </div>
-        <div id="divTTP" style="margin-bottom: 1%">
-          <label style="display: block;">Tiempo de traslado de pasajeros</label>
-          <input id="TTPI" class="form-control col-xs-1 onlyNumber" placeholder="Inicio" style="width: 49%; margin-right: 1%">
-          <input id="TTPF" class="form-control col-xs-1 onlyNumber" input-xs" placeholder="Fin" style="width: 50%">
-        </div>
-      </div>
-      <div class="form-group col-md-2">
-        <div id="divTLP" style="margin-bottom: 1%">
-          <label>Tiempo de atención del mostrador</label> <input id="TLP" class="form-control onlyNumber" placeholder="Ingrese el tiempo de atención del mostrador">
-        </div>
-
-      </div>
+    <div class="col-sm-12 col-md-4 logo" align="right">
+      <img src="http://www.ulima.edu.pe/sites/all/themes/ulima/logo.png" />
     </div>
   </div>
-  <div class="row">
-    <div class="col-md-4" align="left">
-      <button id="btnmanual" type="button" class="btn" onclick="modalmanual()" style="    background-color: #e27e2f;
-				border-color: #c38d63;    color: white;">
-        <span class="glyphicon glyphicon-book" aria-hidden="true"></span> Ver manual
+  <div class="row simulation-form">
+    <div id="form-simple">
+      <div class="form-group col-xd-12 col-sm-4 col-md-2">
+        <div class="fieldset">
+          <label>Modo</label>
+          <select id="select-types" class="form-control" onchange="changeSimulationType()">
+            <option value="simple">Simple</option>
+            <option value="advanced">Avanzado</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group col-xd-12 col-sm-4 col-md-2">
+        <div class="fieldset">
+          <label>Agentes expertos</label>
+          <input id="numexp" class="form-control only-number" placeholder="Ingrese número de agentes expertos">
+        </div>
+        <div class="fieldset">
+          <label>Agentes nuevos</label>
+          <input id="numnew" class="form-control only-number" placeholder="Ingrese número de agentes nuevos">
+        </div>
+      </div>
+    </div>
+    <div id="form-advanced" style="display: none;">
+      <div class="form-group col-xd-12 col-sm-4 col-md-2">
+        <div class="fieldset">
+          <label>Minimo número de agentes atendiendo durante refrigerio</label>
+          <input id="minage" class="form-control only-number" placeholder="Ingrese el mínimo de agentes">
+        </div>
+        <div class="fieldset">
+          <label>Tiempo de refrigerio (horas)</label>
+          <input id="TR" class="form-control only-number" placeholder="Ingrese el tiempo de refrigerio">
+        </div>
+      </div>
+      <div class="form-group col-xd-12 col-sm-4 col-md-2">
+        <div class="fieldset">
+          <label>Tiempo de atención - agente experto (minutos)</label>
+          <input id="TAE" class="form-control only-number" placeholder="Ingrese el tiempo de atención">
+        </div>
+        <div class="fieldset">
+          <label>Tiempo de atención - agente nuevo (minutos)</label>
+          <input id="TAN" class="form-control only-number" placeholder="Ingrese el tiempo de atención">
+        </div>
+      </div>
+      <div class="form-group col-xd-12 col-sm-4 col-md-2">
+        <div class="fieldset">
+          <label>Tiempo de llegada de pasajeros (minutos)</label>
+          <input id="TLP" class="form-control only-number" placeholder="Ingrese el tiempo de llegada de pasajeros">
+        </div>
+        <div class="fieldset">
+          <label>Tiempo de traslado de pasajeros (minutos)</label>
+          <div>
+            <input id="TTPI" style="width: 49%; float: left;" class="form-control only-number" placeholder="Inicio">
+            <input id="TTPF" style="width: 49%; float: right;" class="form-control only-number" placeholder="Fin">
+          </div>
+        </div>
+      </div>
+      <div class="form-group col-xd-12 col-sm-4 col-md-2">
+        <div class="fieldset">
+          <label>Tiempo de atención del mostrador (horas)</label>
+          <input id="TAM" class="form-control only-number" placeholder="Ingrese el tiempo de atención del mostrador">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row options">
+    <div class="col-xs-12 col-sm-8 col-md-4">
+      <button id="button-manual" type="button" class="btn" onclick="showModalManual()">
+        <span class="glyphicon glyphicon-book"></span> Ver manual
       </button>
-      <button id="btnexecute" type="button" class="btn" style="    color: #fff;
-				background-color: #5cb85c;
-				border-color: #4cae4c;" onclick="execute()">
-        <span class="glyphicon glyphicon glyphicon-ok" aria-hidden="true"></span> Ejecutar
+      <button id="button-execute" type="button" class="btn" onclick="execute()">
+        <span class="glyphicon glyphicon glyphicon-ok"></span> Ejecutar
       </button>
-      <button id="btnsave" type="button" class="btn" style="    color: #fff;
-				background-color: #24748c;
-				border-color: #1a677d;" onclick="save()">
-        <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> Guardar
+      <button id="button-save" type="button" class="btn" onclick="save()">
+        <span class="glyphicon glyphicon-floppy-disk"></span> Guardar
       </button>
-      <button id="btncases" type="button" class="btn" style="    color: #fff;
-				background-color: #5c5dcf;
-				border-color: #5c5dcf;" onclick="modalCases()">
-        <span class="glyphicon glyphicon-search" aria-hidden="true"></span> Ver escenarios
+      <button id="button-cases" type="button" class="btn" onclick="showModalCases()">
+        <span class="glyphicon glyphicon-search"></span> Ver escenarios
       </button>
     </div>
   </div>
-  <div id="divrecomendation" class="row" style="margin-top: 2%">
+  <div id="divrecomendation" class="row" style="display:none; margin-top: 2%">
     <div id="alertR" class="alert alert-success" role="alert" style="margin-left: 15px;margin-right: 15px;margin-bottom: 0px;">
       <label>Se recomienda ...</label>
     </div>
   </div>
-  <div id="divResult" class="row" style="margin-top: 2%">
+  <div id="divResult" class="row" style="display:none; margin-top: 2%">
     <div class="col-md-12">
       <div id="piechart_div" style="display: inline-block;"></div>
       <div id="barchart_div" style="display: inline-block;"></div>
@@ -115,34 +121,37 @@
   </div>
 </div>
 
-<!-- Modal -->
-<div class="modal fade" id="modalMsg" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
-  <div id="manual-dialog" class="modal-dialog" role="document">
+<!-- Main Modal -->
+<div class="modal fade" id="main-modal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+  <div class="modal-dialog" role="document">
     <div class="modal-content">
-      <div class="modal-header" id="hmanual" style="background: #6bc4e6">
-        <h3 class="modal-title col-md-11" style="color:white"> <b>Manual de usuario</b></h3>
+      <!-- Headers -->
+      <div class="modal-header" id="header-modal-manual">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
+        <h3 class="modal-title">Manual de usuario</h3>
       </div>
-      <div class="modal-header" id="hwelcome" style="background: #6bc4e6">
-        <h3 class="modal-title col-md-11" style="color:white"> <b>Bienvenido(a)</b></h3>
+      <div class="modal-header" id="header-modal-welcome">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
+        <h3 class="modal-title">Bienvenido(a)</h3>
       </div>
-      <div class="modal-header" id="hcases" style="background: #6bc4e6">
-        <h3 class="modal-title col-md-11" style="color:white"> <b>Lista de escenarios</b></h3>
+      <div class="modal-header" id="header-modal-cases">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
+        <h3 class="modal-title">Lista de escenarios</h3>
       </div>
-      <div class="modal-body col-md-12" id="bmanual">
-        <div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="false">
+      <!-- /.headers -->
+      <!-- Bodies -->
+      <div class="modal-body" id="body-modal-manual">
+        <div id="maunal-carousel" class="carousel slide" data-ride="carousel" data-interval="false">
           <!-- Indicators -->
           <ol class="carousel-indicators">
-            <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-            <li data-target="#myCarousel" data-slide-to="1"></li>
+            <li data-target="#maunal-carousel" data-slide-to="0" class="active"></li>
+            <li data-target="#maunal-carousel" data-slide-to="1"></li>
           </ol>
           <!-- Wrapper for slides -->
           <div class="carousel-inner">
@@ -154,18 +163,18 @@
             </div>
           </div>
           <!-- Left and right controls -->
-          <a class="left carousel-control" href="#myCarousel" data-slide="prev">
+          <a class="left carousel-control" href="#maunal-carousel" data-slide="prev">
             <span class="glyphicon glyphicon-chevron-left"></span>
             <span class="sr-only">Previous</span>
           </a>
-          <a class="right carousel-control" href="#myCarousel" data-slide="next">
+          <a class="right carousel-control" href="#maunal-carousel" data-slide="next">
             <span class="glyphicon glyphicon-chevron-right"></span>
             <span class="sr-only">Next</span>
           </a>
         </div>
       </div>
-      <div class="modal-body col-md-12" id="bcases">
-        <table class="table table-hover" style="width:100%" id="tabcases">
+      <div class="modal-body" id="body-modal-cases">
+        <table class="table table-hover" style="width:100%" id="tabody-modal-cases">
           <thead>
           <th>Nombre del escenario</th>
           <th>Acciones</th>
@@ -202,13 +211,13 @@
           </tbody>
         </table>
       </div>
-      <div class="modal-body col-md-12" id="bwelcome">
-        <p>Facultad: Ingeniería</p>
-        <p>Curso: Sistema de Soporte de decisiones</p>
-        <p>Ciclo: 2017-2</p>
-        <p>Integrantes:</p>
-        <table style="width:100%">
-          <tbody id="tabwelcome">
+      <div class="modal-body" id="body-modal-welcome">
+        <p><b>Facultad:</b> Ingeniería</p>
+        <p><b>Curso:</b> Sistema de Soporte de decisiones</p>
+        <p><b>Ciclo:</b> 2017-2</p>
+        <p><b>Integrantes:</b></p>
+        <table>
+          <tbody id="tabody-modal-welcome">
             <tr><td>Cabrera Diaz, Daniel</td><td>20131642</td></tr>
             <tr><td>Changa Castillo, Christian</td><td>20143344</td></tr>
             <tr><td>Dextre Porras, Anthony</td><td>20111763</td></tr>
@@ -218,28 +227,31 @@
           </tbody>
         </table>
       </div>
-      <div class="modal-footer" id="fwelcome">
+      <!-- /.bodies -->
+      <!-- Footers -->
+      <div class="modal-footer" id="footer-modal-welcome">
         <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
       </div>
-      <div class="modal-footer" id="fcases">
+      <div class="modal-footer" id="footer-modal-cases">
         <button type="button" class="btn btn-success" onclick="seeChanges()" data-dismiss="modal">Mostrar seleccionado(s)</button>
         <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
       </div>
+      <!-- /.footers -->
     </div>
   </div>
 </div>
 
-<!-- Modal 2-->
+<!-- Secondary Modal -->
 <div class="modal fade" id="modalDtl" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
-      <div class="modal-header" id="hmanual" style="background: #6bc4e6">
+      <div class="modal-header" id="header-modal-manual" style="background: #6bc4e6">
         <h3 class="modal-title col-md-11" style="color:white"> <b>Detalles</b></h3>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body col-md-12" id="bwelcome">
+      <div class="modal-body col-md-12" id="body-modal-welcome">
         <table style="width:100%" class="table table-hover">
           <tbody id="tabdetail">
             <tr>
@@ -287,7 +299,7 @@
   </div>
 </div>
 
-<button id="buttonSaveModal" type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#saveModal">Open Modal</button>
+<button id="buttonSaveModal" type="button" style="display: none;" class="btn btn-info btn-lg" data-toggle="modal" data-target="#saveModal">Open Modal</button>
 <div id="saveModal" class="modal fade" role="dialog">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -309,7 +321,6 @@
 </div>
 
 @section Scripts {
-  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
   <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
   <script>
     var simulationResults;
@@ -317,69 +328,24 @@
     //Variables generales
     var listSelected;
 
-    var change = function () {
-
-      if ($("#listOptions").val() == "basic") {
-        $("#divAdvance").hide()
-      }
-      else if ($("#listOptions").val() == "advance") {
-        $("#divAdvance").show()
-      }
-    };
-
-    var modalinit = function () {
-      $("#hwelcome").show()
-      $("#bwelcome").show()
-      $("#bmanual").hide()
-      $("#hmanual").hide()
-      $("#hcases").hide()
-      $("#bcases").hide()
-      $("#fcases").hide()
-      $("#fwelcome").show()
-      $("#modalMsg").modal("show");
-    };
-
-    var modalmanual = function () {
-      $("#hwelcome").hide()
-      $("#bwelcome").hide()
-      $("#bmanual").show()
-      $("#hmanual").show()
-      $("#hcases").hide()
-      $("#bcases").hide()
-      $("#fcases").hide()
-      $("#fwelcome").show()
-      $("#modalMsg").modal("show");
-    };
-
-    var modalCases = function () {
-      $("#hwelcome").hide()
-      $("#bwelcome").hide()
-      $("#bmanual").hide()
-      $("#hmanual").hide()
-      $("#hcases").show()
-      $("#bcases").show()
-      $("#fcases").show()
-      $("#fwelcome").hide()
-      $("#modalMsg").modal("show")
-    };
-
     var execute = function () {
 
       var payload = {}
-      if ($("#listOptions").val() === "simple") {
+      if ($("#select-types").val() === "simple") {
         payload = getSimpleSimulationPayload();
       }
-      else if ($("#listOptions").val() === "advanced") {
+      else if ($("#select-types").val() === "advanced") {
         payload = getAdvancedSimulationPayload();
       }
       else {
         return;
       }
       $.ajax({
-        url: baseUrl + "run/" + $("#listOptions").val(),
+        url: baseUrl + "run/" + $("#select-types").val(),
         data: payload,
         method: "GET",
         success: function (response) {
+          console.log(response);
           if (response !== null && response !== "" && response.status !== 400) {
             simulationResults = response;
             drawChart();
@@ -458,25 +424,8 @@
       barchart.draw(databar, barchart_options);
     };
 
-    //esta funcion es para que solo permita números en los input
-    $(".onlyNumber").keydown(function (e) {
-      // Allow: backspace, delete, tab, escape, enter and .
-      if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110, 190]) !== -1 ||
-        // Allow: Ctrl+A, Command+A
-        (e.keyCode === 65 && (e.ctrlKey === true || e.metaKey === true)) ||
-        // Allow: home, end, left, right, down, up
-        (e.keyCode >= 35 && e.keyCode <= 40)) {
-        // let it happen, don't do anything
-        return;
-      }
-      // Ensure that it is a number and stop the keypress
-      if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
-        e.preventDefault();
-      }
-    });
-
     var save = function () {
-      
+
     };
 
     var eliminate = function (id) {
@@ -529,14 +478,10 @@
     };
 
     var main = function () {
-      $("#divAdvance").hide();
       $("#divResult").hide();
       $("#divrecomendation").hide();
-      modalinit();
-      // Load Charts and the corechart and barchart packages.
+      showModalWelcome();
       google.charts.load('current', { 'packages': ['corechart'] });
-
-      // Draw the pie chart and bar chart when Charts is loaded.
       google.charts.setOnLoadCallback(drawChart);
     };
 
