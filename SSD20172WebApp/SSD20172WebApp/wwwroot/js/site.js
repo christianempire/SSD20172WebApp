@@ -510,6 +510,7 @@ var undisplaySimulationResults = function (simulationId) {
   if (found) {
     displayedSimulationsIds.splice(index, 1);
     $("#results-simulation-" + simulationId).hide();
+    generateAndShowFinalRecommendation();
   }
 };
 
