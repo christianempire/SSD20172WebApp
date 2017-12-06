@@ -6,6 +6,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
   <title>@ViewData["Title"]</title>
 
+  <!-- Google Charts -->
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <script type="text/javascript">
+    var googleChartsLoaded = false;
+    google.charts.load('current', { 'packages': ['corechart'] });
+    google.charts.setOnLoadCallback(function () { 
+      googleChartsLoaded = true;
+    });
+  </script>
+
   <environment include="Development">
     <!-- Bootstrap -->
     <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
@@ -31,7 +41,7 @@
   <!-- Page content -->
   @RenderBody()
   <!-- /.page-content -->
-
+  
   <environment include="Development">
     <!-- JQuery -->
     <script src="~/lib/jquery/dist/jquery.js"></script>

@@ -1,5 +1,6 @@
 ﻿// GLOBAL DATA / FLAGS
 var simulations = [];
+var displayedSimulationsIds = [];
 var currentSimulation = {};
 var firstSimulationExecuted = false;
 var currentSimulationSaved = false;
@@ -29,6 +30,60 @@ var getAdvancedSimulationPayload = function () {
     expertAgentMeanServiceDuration: $("#TAE").val(),
     newAgentMeanServiceDuration: $("#TAN").val()
   }
+};
+
+var executeSimulation = function () {
+  var payload = {}
+  if ($("#select-types").val() === "simple") {
+    payload = getSimpleSimulationPayload();
+  }
+  else if ($("#select-types").val() === "advanced") {
+    payload = getAdvancedSimulationPayload();
+  }
+  else {
+    return;
+  }
+
+  $.ajax({
+    url: baseUrl + "run/" + $("#select-types").val(),
+    data: payload,
+    method: "GET",
+    beforeSend: function () {
+      swal({
+        title: '<img src="/images/100.GIF" />',
+        text: 'Ejecutando escenario...',
+        allowOutsideClick: false,
+        showConfirmButton: false
+      });
+    },
+    success: function (response) {
+      if (response !== null && response !== "" && response.status !== 400) {
+        currentSimulation = response;
+        drawSimulationsResults();
+        firstSimulationExecuted = true;
+        currentSimulationSaved = false;
+        swal(
+          'Éxito',
+          'El escenario se ejecutó correctamente y ya puede ver los resultados.',
+          'success'
+        );
+      } else {
+        swal(
+          'Error',
+          'Hubo un error desconocido en la ejecución del escenario. Revise que halla completado todos los campos e inténtelo de nuevo.',
+          'error'
+        );
+      }
+    },
+    error: function (xhr) {
+      swal(
+        'Error',
+        'Hubo un error desconocido en la ejecución del escenario. Revise que halla completado todos los campos e inténtelo de nuevo.',
+        'error'
+      );
+      console.log(xhr);
+    }
+  });
 };
 
 var saveSimulation = function () {
@@ -67,7 +122,9 @@ var saveSimulation = function () {
     success: function (response) {
       $("#main-modal").modal("hide");
       currentSimulationSaved = true;
+      currentSimulation = {};
       $("#simulation-name").val("");
+      drawSimulationsResults();
       swal(
         'Éxito',
         'Escenario guardado correctamente.',
@@ -101,9 +158,9 @@ var updateAndShowSimulations = function () {
       if (Array.isArray(response)) {
         swal.close();
         simulations = response;
-        updateCasesModalTable();
+        updateSimulationsModalTable();
         if (response.length > 0) {
-          showModalCases();
+          showModalSimulations();
         } else {
           swal(
             'No hay escenarios',
@@ -133,7 +190,7 @@ var updateAndShowSimulations = function () {
 var deleteSimulation = function (simulationId) {
   swal({
     title: 'Confirmación',
-    text: "Una vez eliminado el registro no se podrá recuperar. ¿Seguro que desea eliminarlo?",
+    text: "Una vez eliminado el escenario no se podrá recuperar. ¿Seguro que desea eliminarlo?",
     type: 'warning',
     showCancelButton: true,
     confirmButtonColor: '#3085d6',
@@ -165,7 +222,8 @@ var deleteSimulation = function (simulationId) {
           }
           if (found) {
             simulations.splice(index, 1);
-            updateCasesModalTable();
+            $("#results-simulation-" + simulationId).hide();
+            updateSimulationsModalTable();
             if (simulations.length === 0) {
               $("#main-modal").modal("hide");
             }
@@ -201,9 +259,9 @@ var showModalWelcome = function () {
   $("#header-modal-save").hide();
   $("#body-modal-save").hide();
   $("#footer-modal-save").hide();
-  $("#header-modal-cases").hide();
-  $("#body-modal-cases").hide();
-  $("#footer-modal-cases").hide();
+  $("#header-modal-simulations").hide();
+  $("#body-modal-simulations").hide();
+  $("#footer-modal-simulations").hide();
   $("#main-modal").modal("show");
 };
 
@@ -217,9 +275,9 @@ var showModalManual = function () {
   $("#header-modal-save").hide();
   $("#body-modal-save").hide();
   $("#footer-modal-save").hide();
-  $("#header-modal-cases").hide();
-  $("#body-modal-cases").hide();
-  $("#footer-modal-cases").hide();
+  $("#header-modal-simulations").hide();
+  $("#body-modal-simulations").hide();
+  $("#footer-modal-simulations").hide();
   $("#main-modal").modal("show");
 };
 
@@ -233,13 +291,13 @@ var showModalSave = function () {
   $("#header-modal-save").show();
   $("#body-modal-save").show();
   $("#footer-modal-save").show();
-  $("#header-modal-cases").hide();
-  $("#body-modal-cases").hide();
-  $("#footer-modal-cases").hide();
+  $("#header-modal-simulations").hide();
+  $("#body-modal-simulations").hide();
+  $("#footer-modal-simulations").hide();
   $("#main-modal").modal("show");
 };
 
-var showModalCases = function () {
+var showModalSimulations = function () {
   $("#header-modal-welcome").hide();
   $("#body-modal-welcome").hide();
   $("#footer-modal-welcome").hide();
@@ -249,9 +307,9 @@ var showModalCases = function () {
   $("#header-modal-save").hide();
   $("#body-modal-save").hide();
   $("#footer-modal-save").hide();
-  $("#header-modal-cases").show();
-  $("#body-modal-cases").show();
-  $("#footer-modal-cases").show();
+  $("#header-modal-simulations").show();
+  $("#body-modal-simulations").show();
+  $("#footer-modal-simulations").show();
   $("#main-modal").modal("show");
 };
 
@@ -303,24 +361,165 @@ var attemptOpenSaveModal = function () {
 };
 
 // DATA DISPLAY AND MANIPULATION
-var updateCasesModalTable = function () {
-  $("#cases-table-body").html("");
+var drawPieChart = function (rows, containerElementId) {
+  var dataTable = new google.visualization.DataTable();
+
+  dataTable.addColumn('string', 'Topping');
+  dataTable.addColumn('number', 'Slices');
+  dataTable.addRows(rows);
+
+  var pieChartOptions = {
+    title: 'Utilización promedio de agentes',
+    width: 400,
+    height: 300
+  };
+
+  var pieChart = new google.visualization.PieChart(document.getElementById(containerElementId));
+
+  pieChart.draw(dataTable, pieChartOptions);
+};
+
+var drawBarChart = function (avgWaitingTime, avgTimeInSystem, containerElementId) {
+  var dataTable = new google.visualization.DataTable();
+
+  dataTable.addColumn('string', 'Topping');
+  dataTable.addColumn('number', 'Slices');
+  dataTable.addRows([
+    ['Atención', avgWaitingTime * 60],
+    ['En sistema', avgTimeInSystem]
+  ]);
+
+  var barChartOptions = {
+    title: 'Tiempos promedios (minutos)',
+    width: 400,
+    height: 300,
+    legend: 'none'
+  };
+
+  var barChart = new google.visualization.BarChart(document.getElementById(containerElementId));
+
+  barChart.draw(dataTable, barChartOptions);
+};
+
+var drawSimulationsResults = function () {
+  var simulationsResultsHtml = "";
+  var simulationResults;
+
+  if (!jQuery.isEmptyObject(currentSimulation)) {
+    simulationResults = {};
+    simulationResults.description = "Escenario actual";
+    simulationResults.simulationId = "current";
+    simulationResults.avgNumberInQueue = currentSimulation.avgNumberInQueue;
+    simulationResults.maxNumberInQueue = currentSimulation.maxNumberInQueue;
+    simulationsResultsHtml += Mustache.render($("#results-row-template").html(), simulationResults)
+  }
+
+  for (var i = 0; i < displayedSimulationsIds.length; i++) {
+    var found = false;
+    var index = 0;
+    var simulation;
+    while (!found && index < simulations.length) {
+      if (displayedSimulationsIds[i] === simulations[index].simulationId) {
+        simulation = JSON.parse(JSON.stringify(simulations[index]));
+        found = true;
+      } else {
+        index++;
+      }
+    }
+    if (found) {
+      simulationResults = {};
+      simulationResults.description = simulation.description;
+      simulationResults.simulationId = simulation.simulationId;
+      simulationResults.avgNumberInQueue = simulation.avgNumberInQueue;
+      simulationResults.maxNumberInQueue = simulation.maxNumberInQueue;
+      simulationsResultsHtml += Mustache.render($("#results-row-template").html(), simulationResults)
+    }
+  }
+
+  $("#simulations-results").html(simulationsResultsHtml);
+
+  var rows;
+
+  if (!jQuery.isEmptyObject(currentSimulation)) {
+    rows = [];
+    var expertAgentsCount = 1;
+    var newAgentsCount = 1;
+    for (var i = 0; i < currentSimulation.agent.length; i++) {
+      var agent = currentSimulation.agent[i];
+      if (agent.isExpert) {
+        rows.push(["E" + expertAgentsCount, agent.utilization]);
+        expertAgentsCount++;
+      } else {
+        rows.push(["N" + newAgentsCount, agent.utilization]);
+        newAgentsCount++;
+      }
+    }
+
+    drawPieChart(rows, "piechart-simulation-current");
+    drawBarChart(currentSimulation.avgWaitingTime, currentSimulation.avgTimeInSystem, "barchart-simulation-current");
+  }
+
+  for (var i = 0; i < displayedSimulationsIds.length; i++) {
+    var found = false;
+    var index = 0;
+    var simulation;
+    while (!found && index < simulations.length) {
+      if (displayedSimulationsIds[i] === simulations[index].simulationId) {
+        simulation = JSON.parse(JSON.stringify(simulations[index]));
+        found = true;
+      } else {
+        index++;
+      }
+    }
+    if (found) {
+      rows = [];
+      var expertAgentsCount = 1;
+      var newAgentsCount = 1;
+      for (var j = 0; j < simulation.agent.length; j++) {
+        var agent = simulation.agent[j];
+        if (agent.isExpert) {
+          rows.push(["E" + expertAgentsCount, agent.utilization]);
+          expertAgentsCount++;
+        } else {
+          rows.push(["N" + newAgentsCount, agent.utilization]);
+          newAgentsCount++;
+        }
+      }
+
+      drawPieChart(rows, "piechart-simulation-" + simulation.simulationId);
+      drawBarChart(currentSimulation.avgWaitingTime, currentSimulation.avgTimeInSystem, "barchart-simulation-" + simulation.simulationId);
+    }
+  }
+};
+
+var updateDisplayedSimulationsIds = function () {
+  displayedSimulationsIds = [];
+  $(".button-toggle-simulation-display").each(function () {
+    if ($(this).hasClass("display-simulation")) {
+      displayedSimulationsIds.push(parseInt($(this).attr("simulationId")));
+    }
+  });
+  drawSimulationsResults();
+};
+
+var updateSimulationsModalTable = function () {
+  $("#simulations-table-body").html("");
   var simulationsClone = JSON.parse(JSON.stringify(simulations))
   var simulationsHtml = "";
   for (var i = 0; i < simulationsClone.length; i++) {
     simulation = simulationsClone[i];
     simulation.createdOn = simulation.createdOn.split("T")[0]
-    simulationsHtml += Mustache.render($("#case-row-template").html(), simulation)
+    simulationsHtml += Mustache.render($("#simulation-row-template").html(), simulation)
   }
-  $("#cases-table-body").html(simulationsHtml);
+  $("#simulations-table-body").html(simulationsHtml);
 };
 
-var seeCaseDetails = function (caseId) {
+var seeSimulationDetails = function (simulationId) {
   var found = false;
   var index = 0;
   var simulation;
   while (!found && index < simulations.length) {
-    if (simulations[index].simulationId === caseId) {
+    if (simulations[index].simulationId === simulationId) {
       simulation = simulations[index]
       found = true
     } else {
@@ -339,8 +538,15 @@ var seeCaseDetails = function (caseId) {
         simulationDataTransform.numNewAgents += 1;
       }
     }
-    var detailsHtml = Mustache.render($("#case-details-template").html(), simulationDataTransform);
-    $("#case-details-table-body").html(detailsHtml);
+    var detailsHtml = Mustache.render($("#simulation-details-template").html(), simulationDataTransform);
+    $("#simulation-details-table-body").html(detailsHtml);
     $("#secondary-modal").modal("show");
   }
 };
+
+// MAIN
+
+var main = function () {
+  showModalWelcome();
+};
+$(document).ready(main);

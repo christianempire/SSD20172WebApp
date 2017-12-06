@@ -56,10 +56,43 @@
                 border-color: #1a677d;
             }
 
-            &#button-cases {
+            &#button-simulations {
                 color: #fff;
                 background-color: #5c5dcf;
                 border-color: #5c5dcf;
+            }
+        }
+    }
+
+    #simulations-results {
+        .results {
+            .button-hide-simulation-result {
+                display: inline-block;
+                padding: 3px;
+                line-height: 0;
+                margin-bottom: 7px;
+                margin-right: 5px;
+            }
+
+            h3 {
+                display: inline-block;
+                color: white;
+            }
+
+            .piechart {
+            }
+
+            .barchart {
+            }
+
+            table {
+                background-color: white;
+            }
+
+            &#results-simulation-current {
+                .button-hide-simulation-result {
+                    display: none;
+                }
             }
         }
     }
@@ -86,10 +119,30 @@
                     }
                 }
 
-                &#body-modal-cases {
+                &#body-modal-simulations {
                     table {
                         width: 100%;
                         margin-bottom: 0;
+                    }
+
+                    .button-toggle-simulation-display {
+                        .glyphicon-eye-open {
+                            display: none;
+                        }
+
+                        .glyphicon-eye-close {
+                            display: inline-block;
+                        }
+
+                        &.display-simulation {
+                            .glyphicon-eye-open {
+                                display: inline-block;
+                            }
+
+                            .glyphicon-eye-close {
+                                display: none;
+                            }
+                        }
                     }
                 }
             }
@@ -126,27 +179,5 @@
                 }
             }
         }
-    }
-}
-
-#tabwelcome tr td {
-    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
-    font-size: 14px;
-    line-height: 1.42857143;
-    color: #333;
-}
-
-#tabcases {
-    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
-    font-size: 14px;
-    line-height: 1.42857143;
-    color: #333;
-
-    button {
-        margin-bottom: 5px;
-    }
-
-    td {
-        width: 15px;
     }
 }

@@ -32,10 +32,27 @@
     color: #fff;
     background-color: #24748c;
     border-color: #1a677d; }
-  #home .options button#button-cases {
+  #home .options button#button-simulations {
     color: #fff;
     background-color: #5c5dcf;
     border-color: #5c5dcf; }
+
+#home #simulations-results .results .button-hide-simulation-result {
+  display: inline-block;
+  padding: 3px;
+  line-height: 0;
+  margin-bottom: 7px;
+  margin-right: 5px; }
+
+#home #simulations-results .results h3 {
+  display: inline-block;
+  color: white; }
+
+#home #simulations-results .results table {
+  background-color: white; }
+
+#home #simulations-results .results#results-simulation-current .button-hide-simulation-result {
+  display: none; }
 
 #main-modal .modal-dialog .modal-content {
   overflow: hidden; }
@@ -46,9 +63,17 @@
       font-weight: bold; }
   #main-modal .modal-dialog .modal-content .modal-body#body-modal-welcome table {
     width: 100%; }
-  #main-modal .modal-dialog .modal-content .modal-body#body-modal-cases table {
+  #main-modal .modal-dialog .modal-content .modal-body#body-modal-simulations table {
     width: 100%;
     margin-bottom: 0; }
+  #main-modal .modal-dialog .modal-content .modal-body#body-modal-simulations .button-toggle-simulation-display .glyphicon-eye-open {
+    display: none; }
+  #main-modal .modal-dialog .modal-content .modal-body#body-modal-simulations .button-toggle-simulation-display .glyphicon-eye-close {
+    display: inline-block; }
+  #main-modal .modal-dialog .modal-content .modal-body#body-modal-simulations .button-toggle-simulation-display.display-simulation .glyphicon-eye-open {
+    display: inline-block; }
+  #main-modal .modal-dialog .modal-content .modal-body#body-modal-simulations .button-toggle-simulation-display.display-simulation .glyphicon-eye-close {
+    display: none; }
 
 @media (min-width: 768px) {
   #main-modal .modal-dialog {
@@ -63,20 +88,4 @@
       font-weight: bold; }
   #secondary-modal .modal-dialog .modal-content .modal-body table {
     width: 100%; }
-
-#tabwelcome tr td {
-  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
-  font-size: 14px;
-  line-height: 1.42857143;
-  color: #333; }
-
-#tabcases {
-  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
-  font-size: 14px;
-  line-height: 1.42857143;
-  color: #333; }
-  #tabcases button {
-    margin-bottom: 5px; }
-  #tabcases td {
-    width: 15px; }
 
