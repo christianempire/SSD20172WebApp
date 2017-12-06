@@ -46,10 +46,23 @@
       font-weight: bold; }
   #main-modal .modal-dialog .modal-content .modal-body#body-modal-welcome table {
     width: 100%; }
+  #main-modal .modal-dialog .modal-content .modal-body#body-modal-cases table {
+    width: 100%;
+    margin-bottom: 0; }
 
 @media (min-width: 768px) {
   #main-modal .modal-dialog {
     width: 900px; } }
+
+#secondary-modal .modal-dialog .modal-content {
+  overflow: hidden; }
+  #secondary-modal .modal-dialog .modal-content .modal-header {
+    background: #6bc4e6; }
+    #secondary-modal .modal-dialog .modal-content .modal-header .modal-title {
+      color: white;
+      font-weight: bold; }
+  #secondary-modal .modal-dialog .modal-content .modal-body table {
+    width: 100%; }
 
 #tabwelcome tr td {
   font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;

@@ -4,6 +4,7 @@
   "dependencies": {
     "bootstrap": "v3.3.7",
     "font-awesome": "Font-Awesome#v4.7.0",
-    "sweetalert2": "v7.0.7"
+    "sweetalert2": "v7.0.7",
+    "mustache.js": "mustache#v2.3.0"
   }
 }

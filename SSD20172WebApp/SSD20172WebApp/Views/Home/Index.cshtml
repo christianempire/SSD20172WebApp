@@ -2,6 +2,7 @@
     ViewData["Title"] = "Simulación Aeropuerto";
 }
 
+<!-- Home -->
 <div id="home" class="container-fluid">
   <div class="row heading">
     <div class="col-sm-12 col-md-8 title" align="left">
@@ -83,10 +84,10 @@
       <button id="button-execute" type="button" class="btn" onclick="execute()">
         <span class="glyphicon glyphicon glyphicon-ok"></span> Ejecutar
       </button>
-      <button id="button-save" type="button" class="btn" onclick="save()">
+      <button id="button-save" type="button" class="btn" onclick="attemptOpenSaveModal()">
         <span class="glyphicon glyphicon-floppy-disk"></span> Guardar
       </button>
-      <button id="button-cases" type="button" class="btn" onclick="showModalCases()">
+      <button id="button-cases" type="button" class="btn" onclick="updateAndShowSimulations()">
         <span class="glyphicon glyphicon-search"></span> Ver escenarios
       </button>
     </div>
@@ -102,8 +103,10 @@
       <div id="barchart_div" style="display: inline-block;"></div>
       <table id="tabresult" style="width:auto;display: inline-block;background: white;margin-bottom: 181px;" class="table table-hover table-responsive">
         <thead>
-        <th>Otros datos</th>
-        <th></th>
+          <tr>
+            <th>Otros datos</th>
+            <th></th>
+          </tr>
         </thead>
         <tbody id="tabdetail">
           <tr>
@@ -120,23 +123,29 @@
     </div>
   </div>
 </div>
-
+<!-- /.home -->
 <!-- Main Modal -->
 <div class="modal fade" id="main-modal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <!-- Headers -->
+      <div class="modal-header" id="header-modal-welcome">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h3 class="modal-title">Bienvenido(a)</h3>
+      </div>
       <div class="modal-header" id="header-modal-manual">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
         <h3 class="modal-title">Manual de usuario</h3>
       </div>
-      <div class="modal-header" id="header-modal-welcome">
+      <div class="modal-header" id="header-modal-save">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
-        <h3 class="modal-title">Bienvenido(a)</h3>
+        <h3 class="modal-title">Guardar escenario</h3>
       </div>
       <div class="modal-header" id="header-modal-cases">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -146,6 +155,22 @@
       </div>
       <!-- /.headers -->
       <!-- Bodies -->
+      <div class="modal-body" id="body-modal-welcome">
+        <p><b>Facultad:</b> Ingeniería</p>
+        <p><b>Curso:</b> Sistema de Soporte de decisiones</p>
+        <p><b>Ciclo:</b> 2017-2</p>
+        <p><b>Integrantes:</b></p>
+        <table>
+          <tbody>
+            <tr><td>Cabrera Diaz, Daniel</td><td>20131642</td></tr>
+            <tr><td>Changa Castillo, Christian</td><td>20143344</td></tr>
+            <tr><td>Dextre Porras, Anthony</td><td>20111763</td></tr>
+            <tr><td>Li Morante, Jazmín</td><td>20141941</td></tr>
+            <tr><td>Martínez Vélez, Carlos</td><td>20122872</td></tr>
+            <tr><td>Morillo Palacios, Bruna</td><td>20142059</td></tr>
+          </tbody>
+        </table>
+      </div>
       <div class="modal-body" id="body-modal-manual">
         <div id="maunal-carousel" class="carousel slide" data-ride="carousel" data-interval="false">
           <!-- Indicators -->
@@ -173,63 +198,34 @@
           </a>
         </div>
       </div>
-      <div class="modal-body" id="body-modal-cases">
-        <table class="table table-hover" style="width:100%" id="tabody-modal-cases">
-          <thead>
-          <th>Nombre del escenario</th>
-          <th>Acciones</th>
-          </thead>
-          <tbody>
-            <tr id="c1" class="">
-              <td>Caso 15 agentes</td>
-              <td>
-                <button id="bsc1" type="button" onclick="selectCase('bsc1')" class="btn btn-default case" aria-label="Left Align">
-                  <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
-                </button>
-                <button id="bec1" type="button" onclick="eliminate('c1')" class="btn btn-default" aria-label="Left Align">
-                  <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                </button>
-                <button id="bdc1" type="button" onclick="seeDetails('c1')" class="btn btn-default" aria-label="Left Align">
-                  <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
-                </button>
-              </td>
-            </tr>
-            <tr id="c2" class="">
-              <td>Caso 10 agentes</td>
-              <td>
-                <button type="button" id="bsc2" class="btn btn-default case" onclick="selectCase('bsc2');" aria-label="Left Align">
-                  <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
-                </button>
-                <button id="bec2" type="button" onclick="eliminate('c2')" class="btn btn-default" aria-label="Left Align">
-                  <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                </button>
-                <button id="bdc2" type="button" onclick="seeDetails('c2')" class="btn btn-default" aria-label="Left Align">
-                  <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+      <div class="modal-body" id="body-modal-save">
+        <div class="form-group">
+          <label>Nombre</label>
+          <input id="simulation-name" type="text" class="form-control" placeholder="Ingrese un nombre para el escenario" />
+        </div>
       </div>
-      <div class="modal-body" id="body-modal-welcome">
-        <p><b>Facultad:</b> Ingeniería</p>
-        <p><b>Curso:</b> Sistema de Soporte de decisiones</p>
-        <p><b>Ciclo:</b> 2017-2</p>
-        <p><b>Integrantes:</b></p>
-        <table>
-          <tbody id="tabody-modal-welcome">
-            <tr><td>Cabrera Diaz, Daniel</td><td>20131642</td></tr>
-            <tr><td>Changa Castillo, Christian</td><td>20143344</td></tr>
-            <tr><td>Dextre Porras, Anthony</td><td>20111763</td></tr>
-            <tr><td>Li Morante, Jazmín</td><td>20141941</td></tr>
-            <tr><td>Martínez Vélez, Carlos</td><td>20122872</td></tr>
-            <tr><td>Morillo Palacios, Bruna</td><td>20142059</td></tr>
-          </tbody>
+      <div class="modal-body" id="body-modal-cases">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th>Nombre del escenario</th>
+              <th>Fecha de creación</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="cases-table-body"></tbody>
         </table>
       </div>
       <!-- /.bodies -->
       <!-- Footers -->
       <div class="modal-footer" id="footer-modal-welcome">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+      </div>
+      <div class="modal-footer" id="footer-modal-manual">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+      </div>
+      <div class="modal-footer" id="footer-modal-save">
+        <button type="button" class="btn btn-success" onclick="saveSimulation()">Guardar</button>
         <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
       </div>
       <div class="modal-footer" id="footer-modal-cases">
@@ -240,56 +236,20 @@
     </div>
   </div>
 </div>
-
+<!-- /.main-modal -->
 <!-- Secondary Modal -->
-<div class="modal fade" id="modalDtl" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+<div class="modal fade" id="secondary-modal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
-      <div class="modal-header" id="header-modal-manual" style="background: #6bc4e6">
-        <h3 class="modal-title col-md-11" style="color:white"> <b>Detalles</b></h3>
+      <div class="modal-header" id="header-modal-manual">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
+        <h3 class="modal-title">Detalles</h3>
       </div>
-      <div class="modal-body col-md-12" id="body-modal-welcome">
-        <table style="width:100%" class="table table-hover">
-          <tbody id="tabdetail">
-            <tr>
-              <td>Agentes expertos</td>
-              <td>2</td>
-            </tr>
-            <tr>
-              <td>Agentes nuevos</td>
-              <td>2</td>
-            </tr>
-            <tr>
-              <td>Turno de agentes</td>
-              <td>2</td>
-            </tr>
-            <tr>
-              <td>Tiempo de refrigerio</td>
-              <td>2</td>
-            <tr>
-              <td>Tiempo de atención - agente experto</td>
-              <td>2</td>
-            </tr>
-            <tr>
-              <td>Tiempo de atención - agente nuevo</td>
-              <td>2</td>
-            </tr>
-            <tr>
-              <td>Tiempo de atención del mostrador</td>
-              <td>2</td>
-            </tr>
-            <tr>
-              <td>Tiempo de atención del traslado de pasajeros - inicio</td>
-              <td>2</td>
-            </tr>
-            <tr>
-              <td>Tiempo de atención del traslado de pasajeros - fin</td>
-              <td>2</td>
-            </tr>
-          </tbody>
+      <div class="modal-body" id="body-modal-welcome">
+        <table class="table table-hover">
+          <tbody id="case-details-table-body"></tbody>
         </table>
       </div>
       <div class="modal-footer" id="fdetail">
@@ -299,32 +259,65 @@
   </div>
 </div>
 
-<button id="buttonSaveModal" type="button" style="display: none;" class="btn btn-info btn-lg" data-toggle="modal" data-target="#saveModal">Open Modal</button>
-<div id="saveModal" class="modal fade" role="dialog">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header" style="background: #6bc4e6">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title" style="color: white">Modal Header</h4>
-      </div>
-      <div class="modal-body">
-        <div class="form-group">
-          <input id="modeldescription" type="text" class="form-control" placeholder="Escriba un nombre para el modelo" />
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" onclick="$('#buttonSaveModal').trigger('click')" data-dismiss="modal">Guardar</button>
-        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-      </div>
-    </div>
-  </div>
-</div>
+<!-- /.secondary-modal -->
+<!-- Case row template -->
+<script id="case-row-template" type="text/html">
+  <tr id="simulation-{{simulationId}}">
+    <td>{{description}}</td>
+    <td>{{createdOn}}</td>
+    <td>
+      <button type="button" onclick="toggleViewCase({{simulationId}})" class="btn btn-default case">
+        <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
+      </button>
+      <button type="button" onclick="deleteSimulation({{simulationId}})" class="btn btn-default">
+        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+      </button>
+      <button type="button" onclick="seeCaseDetails({{simulationId}})" class="btn btn-default">
+        <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+      </button>
+    </td>
+  </tr>
+</script>
+<!-- /. cases-row-template -->
+<!-- Case details template -->
+<script id="case-details-template" type="text/html">
+  <tr>
+    <td>Agentes expertos</td>
+    <td>{{numExpertAgents}}</td>
+  </tr>
+  <tr>
+    <td>Agentes nuevos</td>
+    <td>{{numNewAgents}}</td>
+  </tr>
+  <tr>
+    <td>Tiempo de refrigerio (horas)</td>
+    <td>{{agentLunchDuration}}</td>
+  <tr>
+    <td>Tiempo de atención - agente experto (minutos)</td>
+    <td>{{expertAgentMeanServiceDuration}}</td>
+  </tr>
+  <tr>
+    <td>Tiempo de atención - agente nuevo (minutos)</td>
+    <td>{{newAgentMeanServiceDuration}}</td>
+  </tr>
+  <tr>
+    <td>Tiempo de atención del mostrador (horas)</td>
+    <td>{{totalServiceDuration}}</td>
+  </tr>
+  <tr>
+    <td>Tiempo de atención del traslado de pasajeros - inicio (minutos)</td>
+    <td>{{lowerTransferTime}}</td>
+  </tr>
+  <tr>
+    <td>Tiempo de atención del traslado de pasajeros - fin (minutos)</td>
+    <td>{{upperTransferTime}}</td>
+  </tr>
+</script>
+<!-- /.case-details-template -->
 
 @section Scripts {
   <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
   <script>
-    var simulationResults;
-
     //Variables generales
     var listSelected;
 
@@ -344,17 +337,42 @@
         url: baseUrl + "run/" + $("#select-types").val(),
         data: payload,
         method: "GET",
+        beforeSend: function () {
+          swal({
+            title: '<img src="/images/100.GIF" />',
+            text: 'Ejecutando escenario...',
+            allowOutsideClick: false,
+            showConfirmButton: false
+          });
+        },
         success: function (response) {
-          console.log(response);
           if (response !== null && response !== "" && response.status !== 400) {
-            simulationResults = response;
+            currentSimulation = response;
             drawChart();
-            $("#tabdetail").html('<tr><td> Tamaño promedio de cola</td><td>' + simulationResults.avgNumberInQueue + '</td></tr><tr><td>Tamaño máximo de la cola</td><td>' + simulationResults.maxNumberInQueue + '</td></tr>');
+            $("#tabdetail").html('<tr><td> Tamaño promedio de cola</td><td>' + currentSimulation.avgNumberInQueue + '</td></tr><tr><td>Tamaño máximo de la cola</td><td>' + currentSimulation.maxNumberInQueue + '</td></tr>');
             $("#divResult").show();
             $("#divrecomendation").show();
+            firstSimulationExecuted = true;
+            currentSimulationSaved = false;
+            swal(
+              'Éxito',
+              'El escenario se ejecutó correctamente y ya puede ver los resultados.',
+              'success'
+            );
+          } else {
+            swal(
+              'Error',
+              'Hubo un error desconocido en la ejecución del escenario.',
+              'error'
+            );
           }
         },
         error: function (xhr) {
+          swal(
+            'Error',
+            'Hubo un error desconocido en la ejecución del escenario.',
+            'error'
+          );
           console.log(xhr);
         }
       });
@@ -366,12 +384,12 @@
       var datapie = new google.visualization.DataTable();
       datapie.addColumn('string', 'Topping');
       datapie.addColumn('number', 'Slices');
-      if (simulationResults && typeof simulationResults !== "undefined") {
+      if (currentSimulation && typeof currentSimulation !== "undefined") {
         rows = [];
         contExp = 1;
         contNue = 1;
-        for (var i = 0; i < simulationResults.agent.length; i++) {
-          agent = simulationResults.agent[i];
+        for (var i = 0; i < currentSimulation.agent.length; i++) {
+          agent = currentSimulation.agent[i];
           if (agent.isExpert) {
             rows.push(['E' + contExp, agent.utilization]);
             contExp++;
@@ -402,10 +420,10 @@
       var databar = new google.visualization.DataTable();
       databar.addColumn('string', 'Topping');
       databar.addColumn('number', 'Slices');
-      if (simulationResults && typeof simulationResults !== "undefined") {
+      if (currentSimulation && typeof currentSimulation !== "undefined") {
         databar.addRows([
-          ['Atención', simulationResults.avgWaitingTime * 60],
-          ['Pasajero\nen el sistema', simulationResults.avgTimeInSystem],
+          ['Atención', currentSimulation.avgWaitingTime * 60],
+          ['Pasajero\nen el sistema', currentSimulation.avgTimeInSystem],
         ]);
       } else {
         databar.addRows([
@@ -424,36 +442,7 @@
       barchart.draw(databar, barchart_options);
     };
 
-    var save = function () {
-
-    };
-
-    var eliminate = function (id) {
-      swal({
-        title: "Confirmación",
-        text: "Una vez eliminado el registro no se podrá recuperar. ¿Seguro que desea eliminarlo?",
-        type: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#DD6B55",
-        cancelButtonText: "No",
-        confirmButtonText: "Sí",
-        closeOnConfirm: false,
-        closeOnCancel: true
-      }).then(isConfirm => {
-        if (isConfirm) {
-          swal(
-            "\u00C9xito",
-            "Escenario eliminado correctamente",
-            "success");
-        }
-      });
-    };
-
-    var seeDetails = function (id) {
-      $("#modalDtl").modal("show");
-    };
-
-    var selectCase = function (id) {
+    var toggleViewCase = function (id) {
       var idnew = "#" + id
 
       //Esta parte es para cambiar el ícono

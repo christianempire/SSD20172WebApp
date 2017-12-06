@@ -85,6 +85,13 @@
                         width: 100%;
                     }
                 }
+
+                &#body-modal-cases {
+                    table {
+                        width: 100%;
+                        margin-bottom: 0;
+                    }
+                }
             }
 
             .modal-footer {
@@ -95,6 +102,29 @@
     @media (min-width: 768px) {
         .modal-dialog {
             width: 900px;
+        }
+    }
+}
+
+#secondary-modal {
+    .modal-dialog {
+        .modal-content {
+            overflow: hidden;
+
+            .modal-header {
+                background: #6bc4e6;
+
+                .modal-title {
+                    color: white;
+                    font-weight: bold;
+                }
+            }
+
+            .modal-body {
+                table {
+                    width: 100%;
+                }
+            }
         }
     }
 }
