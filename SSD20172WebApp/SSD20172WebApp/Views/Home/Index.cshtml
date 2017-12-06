@@ -82,7 +82,7 @@
         <span class="glyphicon glyphicon-book"></span> Ver manual
       </button>
       <button id="button-execute" type="button" class="btn" onclick="executeSimulation()">
-        <span class="glyphicon glyphicon glyphicon-ok"></span> Ejecutar
+        <span class="glyphicon glyphicon glyphicon-flash"></span> Ejecutar
       </button>
       <button id="button-save" type="button" class="btn" onclick="attemptOpenSaveModal()">
         <span class="glyphicon glyphicon-floppy-disk"></span> Guardar
@@ -92,12 +92,11 @@
       </button>
     </div>
   </div>
+  <div id="final-recommendation" style="display: none;" class="alert alert-success" role="alert">
+    <p><b>Se recomienda adoptar el/los siguiente(s) escenario(s):</b></p>
+    <div id="recommended-simulations"></div>
+  </div>
   <div id="simulations-results"></div>
-  @*<div id="divrecomendation" class="row" style="display:none; margin-top: 2%">
-    <div id="alertR" class="alert alert-success" role="alert" style="margin-left: 15px;margin-right: 15px;margin-bottom: 0px;">
-      <label>Se recomienda ...</label>
-    </div>
-  </div>*@
 </div>
 <!-- /.home -->
 <!-- Main Modal -->
@@ -234,15 +233,26 @@
     </div>
   </div>
 </div>
-
 <!-- /.secondary-modal -->
+<!-- Recommended simulation template -->
+<script id="recommended-simulation-template" type="text/html">
+  {{#winners}}
+  <p>{{description}}, pues:</p>
+  <ul>
+    {{#comments}}
+    <li>{{comment}}</li>
+    {{/comments}}
+  </ul>
+  {{/winners}}
+</script>
+<!-- /.recommended-simulation-template -->
 <!-- Results row template -->
 <script id="results-row-template" type="text/html">
   <div id="results-simulation-{{simulationId}}" class="row results">
     <div class="col-xs-12">
-      <button type="button" 
+      <button type="button"
               id="button-hide-simulation-{{simulationId}}-result"
-              onclick="$('#results-simulation-{{simulationId}}').hide()" 
+              onclick="undisplaySimulationResults({{simulationId}})"
               class="btn btn-danger button-hide-simulation-result">
         <span class="glyphicon glyphicon-remove"></span>
       </button>

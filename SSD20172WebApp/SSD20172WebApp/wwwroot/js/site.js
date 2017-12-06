@@ -60,6 +60,7 @@ var executeSimulation = function () {
       if (response !== null && response !== "" && response.status !== 400) {
         currentSimulation = response;
         drawSimulationsResults();
+        generateAndShowFinalRecommendation();
         firstSimulationExecuted = true;
         currentSimulationSaved = false;
         swal(
@@ -125,6 +126,7 @@ var saveSimulation = function () {
       currentSimulation = {};
       $("#simulation-name").val("");
       drawSimulationsResults();
+      generateAndShowFinalRecommendation();
       swal(
         'Éxito',
         'Escenario guardado correctamente.',
@@ -227,6 +229,7 @@ var deleteSimulation = function (simulationId) {
             if (simulations.length === 0) {
               $("#main-modal").modal("hide");
             }
+            generateAndShowFinalRecommendation();
           }
           swal(
             'Éxito',
@@ -487,8 +490,26 @@ var drawSimulationsResults = function () {
       }
 
       drawPieChart(rows, "piechart-simulation-" + simulation.simulationId);
-      drawBarChart(currentSimulation.avgWaitingTime, currentSimulation.avgTimeInSystem, "barchart-simulation-" + simulation.simulationId);
+      drawBarChart(simulation.avgWaitingTime, simulation.avgTimeInSystem, "barchart-simulation-" + simulation.simulationId);
     }
+  }
+
+  generateAndShowFinalRecommendation();
+};
+
+var undisplaySimulationResults = function (simulationId) {
+  var found = false;
+  var index = 0;
+  while (!found && index < displayedSimulationsIds.length) {
+    if (displayedSimulationsIds[index] === simulationId) {
+      found = true;
+    } else {
+      index++;
+    }
+  }
+  if (found) {
+    displayedSimulationsIds.splice(index, 1);
+    $("#results-simulation-" + simulationId).hide();
   }
 };
 
@@ -502,6 +523,127 @@ var updateDisplayedSimulationsIds = function () {
   drawSimulationsResults();
 };
 
+var generateAndShowFinalRecommendation = function () {
+  var simulationsToCompare = [];
+  $("#final-recommendation").hide();
+
+  if (!jQuery.isEmptyObject(currentSimulation)) {
+    simulationsToCompare.push(currentSimulation);
+  }
+
+  for (var i = 0; i < displayedSimulationsIds.length; i++) {
+    var found = false;
+    var index = 0;
+    var simulation;
+    while (!found && index < simulations.length) {
+      if (displayedSimulationsIds[i] === simulations[index].simulationId) {
+        simulation = JSON.parse(JSON.stringify(simulations[index]));
+        found = true;
+      } else {
+        index++;
+      }
+    }
+    if (found) {
+      simulationsToCompare.push(simulation);
+    }
+  }
+
+  if (simulationsToCompare.length > 1) {
+    var avgTimeInSystemWinners = [];
+    var minValue1 = 9999;
+
+    var avgWaitingTimeWinners = [];
+    var minValue2 = 9999;
+
+    var avgNumberInQueueWinners = [];
+    var minValue3 = 9999;
+
+    var maxNumberInQueueWinners = [];
+    var minValue4 = 9999;
+
+    var finalScores = {};
+
+    for (var i = 0; i < simulationsToCompare.length; i++) {
+      var simulation = simulationsToCompare[i];
+
+      if (minValue1 > simulation.avgTimeInSystem) {
+        minValue1 = simulation.avgTimeInSystem;
+        avgTimeInSystemWinners = [simulation];
+      } else if (minValue1 === simulation.avgTimeInSystem) {
+        avgTimeInSystemWinners.push(simulation);
+      }
+
+      if (minValue2 > simulation.avgWaitingTime) {
+        minValue2 = simulation.avgWaitingTime;
+        avgWaitingTimeWinners = [simulation];
+      } else if (minValue2 === simulation.avgWaitingTime) {
+        avgWaitingTimeWinners.push(simulation);
+      }
+
+      if (minValue3 > simulation.avgNumberInQueue) {
+        minValue3 = simulation.avgNumberInQueue;
+        avgNumberInQueueWinners = [simulation];
+      } else if (minValue3 === simulation.avgNumberInQueue) {
+        avgNumberInQueueWinners.push(simulation);
+      }
+
+      if (minValue4 > simulation.maxNumberInQueue) {
+        minValue4 = simulation.maxNumberInQueue;
+        maxNumberInQueueWinners = [simulation];
+      } else if (minValue4 === simulation.maxNumberInQueue) {
+        maxNumberInQueueWinners.push(simulation);
+      }
+
+      finalScores[simulation.simulationId + ""] = {
+        score: 0,
+        description: ((simulation.simulationId === 0) ? "Escenario actual" : simulation.description),
+        comments: []
+      };
+    }
+
+    for (var i = 0; i < avgTimeInSystemWinners.length; i++) {
+      var winner = finalScores[avgTimeInSystemWinners[i].simulationId + ""];
+      winner.score++;
+      winner.comments.push({ comment: "Posee el menor tiempo promedio en sistema." });
+    }
+
+    for (var i = 0; i < avgWaitingTimeWinners.length; i++) {
+      var winner = finalScores[avgWaitingTimeWinners[i].simulationId + ""];
+      winner.score++;
+      winner.comments.push({ comment: "Posee el menor tiempo promedio de atención." });
+    }
+
+    for (var i = 0; i < avgNumberInQueueWinners.length; i++) {
+      var winner = finalScores[avgNumberInQueueWinners[i].simulationId + ""];
+      winner.score++;
+      winner.comments.push({ comment: "Posee el menor promedio de clientes en cola." });
+    }
+
+    for (var i = 0; i < maxNumberInQueueWinners.length; i++) {
+      var winner = finalScores[maxNumberInQueueWinners[i].simulationId + ""];
+      winner.score++;
+      winner.comments.push({ comment: "Posee el menor máximo de clientes en cola." });
+    }
+
+    var finalWinners = [];
+    var maxScore = -1;
+
+    for (var id in finalScores) {
+      if (finalScores.hasOwnProperty(id)) {
+        if (maxScore < finalScores[id].score) {
+          maxScore = finalScores[id].score;
+          finalWinners = [finalScores[id]];
+        } else if (maxScore === finalScores[id].score) {
+          finalWinners.push(finalScores[id]);
+        }
+      }
+    }
+
+    $("#recommended-simulations").html(Mustache.render($("#recommended-simulation-template").html(), { winners: finalWinners }));
+    $("#final-recommendation").show();
+  }
+};
+
 var updateSimulationsModalTable = function () {
   $("#simulations-table-body").html("");
   var simulationsClone = JSON.parse(JSON.stringify(simulations))
@@ -509,7 +651,7 @@ var updateSimulationsModalTable = function () {
   for (var i = 0; i < simulationsClone.length; i++) {
     simulation = simulationsClone[i];
     simulation.createdOn = simulation.createdOn.split("T")[0]
-    simulationsHtml += Mustache.render($("#simulation-row-template").html(), simulation)
+    simulationsHtml += Mustache.render($("#simulation-row-template").html(), simulation);
   }
   $("#simulations-table-body").html(simulationsHtml);
 };
