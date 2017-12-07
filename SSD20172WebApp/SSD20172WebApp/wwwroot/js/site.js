@@ -71,7 +71,7 @@ var executeSimulation = function () {
       } else {
         swal(
           'Error',
-          'Hubo un error desconocido en la ejecución del escenario. Revise que halla completado todos los campos e inténtelo de nuevo.',
+          'Hubo un error desconocido en la ejecución del escenario. Revise que haya completado todos los campos e inténtelo de nuevo.',
           'error'
         );
       }
@@ -79,7 +79,7 @@ var executeSimulation = function () {
     error: function (xhr) {
       swal(
         'Error',
-        'Hubo un error desconocido en la ejecución del escenario. Revise que halla completado todos los campos e inténtelo de nuevo.',
+        'Hubo un error desconocido en la ejecución del escenario. Revise que haya completado todos los campos e inténtelo de nuevo.',
         'error'
       );
       console.log(xhr);
